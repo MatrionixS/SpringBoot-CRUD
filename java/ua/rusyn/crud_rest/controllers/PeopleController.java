@@ -3,9 +3,12 @@ package ua.rusyn.crud_rest.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ua.rusyn.crud_rest.dao.PersonDAO;
 import ua.rusyn.crud_rest.models.Person;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/people")
@@ -25,12 +28,14 @@ public class PeopleController {
         return "views/people/show";
     }
     @GetMapping("/new")
-    public String newPerson(Model model){
-        model.addAttribute("person", new Person());
+    public String newPerson(@ModelAttribute("person") Person person){
         return "views/people/new";
     }
     @PostMapping
-    public String create(@ModelAttribute("person") Person person){
+    public String create(@ModelAttribute("person") @Valid Person person, BindingResult bindingResult){
+        if (bindingResult.hasErrors()){
+            return "views/people/new";
+        }
         personDAO.save(person);
      return  "redirect:/people";
     }
@@ -40,7 +45,10 @@ public class PeopleController {
         return "views/people/edit";
     }
     @PatchMapping("/{id}")
-    public String update(@ModelAttribute("person") Person person,@PathVariable("id")int id){
+    public String update(@ModelAttribute("person") @Valid Person person,BindingResult bindingResult,@PathVariable("id")int id){
+        if (bindingResult.hasErrors()) {
+            return "views/people/edit";
+        }
         personDAO.update(id,person);
         return "redirect:/people";
     }

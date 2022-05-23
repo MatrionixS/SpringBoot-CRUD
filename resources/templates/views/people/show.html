@@ -9,9 +9,10 @@
     <input type="submit" value="Edit">
 </form>
 <hr/>
-<p th:text="${person.getName()}" > Name</p>
+<p th:text="${person.getName() + ', '+ person.getAge()}" > Name</p>
+<p th:text="${person.getEmail()}" > Email</p>
 <p th:text="${person.getId()}" > Id</p>
-
+<a th:href="@{/people}">To first page</a>
 <!--<a th:href="@{/people/{id}/edit(id=${person.getId()})}">Edit</a>-->
 <hr/>
 <form th:method="DELETE" th:action="@{/people/{id}(id=${person.getId()})}">
